@@ -33,3 +33,14 @@ func GetTeamByName(ctx *gin.Context) {
 
 	ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "team with name " + name + " not found"})
 }
+
+func AddTeam(ctx *gin.Context) {
+	var newTeam Team
+
+	if err := ctx.BindJSON(&newTeam); err != nil {
+		return
+	}
+
+	teams = append(teams, newTeam)
+	ctx.IndentedJSON(http.StatusAccepted, newTeam)
+}

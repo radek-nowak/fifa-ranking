@@ -8,7 +8,11 @@ import (
 
 func main() {
 	router := gin.Default()
+
 	router.GET("/teams", controllers.GetTeams)
 	router.GET("/teams/:name", controllers.GetTeamByName)
+
+	router.POST("/teams", controllers.AddTeam)
+
 	router.Run("localhost:9090")
 }
