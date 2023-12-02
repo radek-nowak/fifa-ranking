@@ -20,3 +20,16 @@ var teams = []Team{
 func GetTeams(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, teams)
 }
+
+func GetTeamByName(ctx *gin.Context) {
+	name := ctx.Param("name")
+
+	for _, t := range teams {
+		if t.Namne == name {
+			ctx.IndentedJSON(http.StatusOK, t)
+			return
+		}
+	}
+
+	ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "team with name " + name + " not found"})
+}
