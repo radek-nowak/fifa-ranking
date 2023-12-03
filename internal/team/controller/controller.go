@@ -5,38 +5,42 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/radek-nowak/fifa-ranking/internal/team/model"
+	"github.com/radek-nowak/fifa-ranking/internal/team/service"
 )
 
-var teams = []model.Team{
-	{ID: 1, Namne: "Liverpool", Stars: 5},
-	{ID: 2, Namne: "Manchester City", Stars: 5},
+type TeamsController struct {
+	service *service.TeamService
 }
 
-func GetTeams(ctx *gin.Context) {
+func NewController(teamService *service.TeamService) *TeamsController {
+	return &TeamsController{service: teamService}
+}
+
+func (t *TeamsController) GetTeams(ctx *gin.Context) {
+	teams := t.service.GetTeams()
 	ctx.IndentedJSON(http.StatusOK, teams)
 }
 
-func GetTeamByName(ctx *gin.Context) {
-	name := ctx.Param("name")
-
-	for _, t := range teams {
-		if t.Namne == name {
-			ctx.IndentedJSON(http.StatusOK, t)
-			return
-		}
-	}
-
-	ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "team with name " + name + " not found"})
-}
-
-func AddTeam(ctx *gin.Context) {
-	var newTeam model.Team
-
-	if err := ctx.BindJSON(&newTeam); err != nil {
-		return
-	}
-
-	teams = append(teams, newTeam)
-	ctx.IndentedJSON(http.StatusAccepted, newTeam)
-}
+//
+// func GetTeamByName(ctx *gin.Context) {
+// 	name := ctx.Param("name")
+//
+// 	for _, t := range teams {
+// 		if t.Namne == name {
+// 			ctx.IndentedJSON(http.StatusOK, t)
+// 			return
+// 		}
+// 	}
+//
+// 	ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "team with name " + name + " not found"})
+// }
+//
+// func AddTeam(ctx *gin.Context) {
+// 	var newTeam model.Team
+//
+// 	if err := ctx.BindJSON(&newTeam); err != nil {
+// 		return
+// 	}
+//
+// 	teams = append(teams, newTeam)
+// 	ctx.IndentedJSON(http.StatusAccepted, newTeam)}
