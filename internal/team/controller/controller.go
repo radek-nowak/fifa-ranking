@@ -4,15 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+
+	"github.com/radek-nowak/fifa-ranking/internal/team/model"
 )
 
-type Team struct {
-	ID    int32  `json:"id"`
-	Namne string `json:"name"`
-	Stars int    `json:"stars"`
-}
-
-var teams = []Team{
+var teams = []model.Team{
 	{ID: 1, Namne: "Liverpool", Stars: 5},
 	{ID: 2, Namne: "Manchester City", Stars: 5},
 }
@@ -35,7 +31,7 @@ func GetTeamByName(ctx *gin.Context) {
 }
 
 func AddTeam(ctx *gin.Context) {
-	var newTeam Team
+	var newTeam model.Team
 
 	if err := ctx.BindJSON(&newTeam); err != nil {
 		return
