@@ -19,7 +19,7 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/teams", con.GetTeams)
-	// router.GET("/teams/:name", con.GetTeamByName)
+	router.GET("/teams/:name", con.GetTeamByName)
 	//
 	// router.POST("/teams", con.AddTeam)
 

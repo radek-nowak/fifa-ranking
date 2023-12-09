@@ -2,6 +2,8 @@ package repository
 
 import (
 	"database/sql"
+	"errors"
+	"log"
 
 	_ "github.com/lib/pq"
 
@@ -18,7 +20,7 @@ func NewRepository() (*TeamRepository, error) {
 		return nil, err
 	}
 
-	return &TeamRepository{db: db}, err
+	return &TeamRepository{db: db}, nil
 }
 
 func open() (*sql.DB, error) {
@@ -60,6 +62,29 @@ func (r *TeamRepository) GetTeams() []model.Team {
 	}
 
 	return teams
+}
+
+func (r *TeamRepository) GetTeamByName(name string) (model.Team, error) {
+	db, err := open()
+	defer db.Close()
+	if err != nil {
+		return model.Team{}, err
+	}
+
+	row := db.QueryRow("SELECT * FROM teams WHERE name=$1", name)
+
+	var team model.Team
+	err = row.Scan(&team.ID, &team.Name, &team.Stars)
+	if err == sql.ErrNoRows {
+		log.Fatal(err)
+		return model.Team{}, errors.New("Could not find the team")
+	}
+	if err != nil {
+		log.Fatal(err)
+		return model.Team{}, err
+	}
+
+	return team, nil
 }
 
 func loadMockData(db *sql.DB) error {

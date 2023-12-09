@@ -21,17 +21,18 @@ func (t *TeamsController) GetTeams(ctx *gin.Context) {
 	ctx.IndentedJSON(http.StatusOK, teams)
 }
 
-//
-// func GetTeamByName(ctx *gin.Context) {
-// 	name := ctx.Param("name")
-//
-// 	for _, t := range teams {
-// 		if t.Namne == name {
-// 			ctx.IndentedJSON(http.StatusOK, t)
-// 			return
-// 		}
-// 	}
-//
+func (t *TeamsController) GetTeamByName(ctx *gin.Context) {
+	name := ctx.Param("name")
+	team, err := t.service.GetTeam(name)
+	if err != nil {
+		ctx.IndentedJSON(
+			http.StatusNotFound,
+			gin.H{"message": "team with name " + name + " not found"},
+		)
+	}
+	ctx.IndentedJSON(http.StatusOK, team)
+}
+
 // 	ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "team with name " + name + " not found"})
 // }
 //
