@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/radek-nowak/fifa-ranking/internal/team/model"
 	"github.com/radek-nowak/fifa-ranking/internal/team/service"
 )
 
@@ -31,6 +32,21 @@ func (t *TeamsController) GetTeamByName(ctx *gin.Context) {
 		)
 	}
 	ctx.IndentedJSON(http.StatusOK, team)
+}
+
+func (t *TeamsController) AddTeam(ctx *gin.Context) {
+	var team model.Team
+
+	if err := ctx.BindJSON(&team); err != nil {
+		ctx.IndentedJSON(
+			http.StatusEarlyHints,
+			gin.H{"message": "Error occured when creating a new team"},
+		)
+		return
+	}
+
+	t.service.SaveNewTeam(team)
+	ctx.IndentedJSON(http.StatusCreated, team)
 }
 
 // 	ctx.IndentedJSON(http.StatusNotFound, gin.H{"message": "team with name " + name + " not found"})

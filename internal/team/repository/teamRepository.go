@@ -87,6 +87,23 @@ func (r *TeamRepository) GetTeamByName(name string) (model.Team, error) {
 	return team, nil
 }
 
+func (r *TeamRepository) Save(team model.Team) error {
+	db, err := open()
+	defer db.Close()
+	if err != nil {
+		return err
+	}
+
+	_, err = db.Exec("INSERT INTO teams (name, stars) VALUES ($1, $2)", team.Name, team.Stars)
+
+	if err != nil {
+		log.Fatal(err)
+		return err
+	}
+
+	return nil
+}
+
 func loadMockData(db *sql.DB) error {
 	deleteQuery := `
     DELETE FROM teams;

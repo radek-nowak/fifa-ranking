@@ -24,3 +24,11 @@ func (s *TeamService) GetTeam(name string) (model.Team, error) {
 	}
 	return team, nil
 }
+
+func (s *TeamService) SaveNewTeam(team model.Team) error {
+	err := s.repository.Save(team)
+	if err != nil {
+		return err
+	}
+	return nil
+}
